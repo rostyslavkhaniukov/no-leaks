@@ -50,9 +50,33 @@ final class LeakyIntegrationTest extends TestCase
     }
 
     /** @test */
+    public function doesNotLeakGarbageCollectedMocks() : void
+    {
+        $this->createMock(stdClass::class);
+
+        $this->addToAssertionCount(1);
+    }
+
+    /** @test */
+    public function doesNotLeakGarbageCollectedProphecyMocks() : void
+    {
+        $this->prophesize(stdClass::class);
+
+        $this->addToAssertionCount(1);
+    }
+
+    /** @test */
     public function doesLeakAMock() : void
     {
         self::$memoryLeakingStupidMistake[] = $this->createMock(stdClass::class);
+
+        $this->addToAssertionCount(1);
+    }
+
+    /** @test */
+    public function doesLeakAProphecyMock() : void
+    {
+        self::$memoryLeakingStupidMistake[] = $this->prophesize(stdClass::class);
 
         $this->addToAssertionCount(1);
     }
